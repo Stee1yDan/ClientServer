@@ -17,7 +17,8 @@
 #define ROWS 5         // number of rows in matrix
 #define COLS 2        // number of columns in matrix
 
-sem_t* semaphore = sem_open("/my_semaphore", O_CREAT, 0666, 1);
+sem_t* clientSemaphore = sem_open("/my_semaphore1", 0);
+sem_t* serverSemaphore = sem_open("/my_semaphore2", 0);
 
 int shmid = shmget(SHM_KEY, BUF_SIZE, IPC_CREAT | 0666);
     
@@ -25,10 +26,13 @@ int* shmaddr = (int*) shmat(shmid, NULL, 0);
 
 void writeToMemory()
 {
-    sem_wait(semaphore);
-    sleep(15);
+    int value;
+    sem_getvalue(serverSemaphore, &value);
+    std::cout << value << "\n";
 
-    std::cout << "Hello from client " << &semaphore << "\n";
+    sem_wait(serverSemaphore); // Wait for memory access
+
+    // std::cout << "Hello from client " << &semaphore << "\n";
 
     int matrix[ROWS][COLS] = {{1, 6}, {3, 1}, {7, 2}, {4, 4}, {8, 5}};
     
@@ -41,7 +45,8 @@ void writeToMemory()
         }
     }
 
-    sem_post(semaphore);
+    sem_post(clientSemaphore); // Set client to 1 and allow server to read info
+    sem_post(serverSemaphore); // Unlock access to memory memory for client
 }
 
 int main(int argc, char const *argv[])

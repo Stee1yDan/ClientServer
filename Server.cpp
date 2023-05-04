@@ -17,7 +17,8 @@
 #define ROWS 5         // number of rows in matrix
 #define COLS 2        // number of columns in matrix
 
-sem_t* semaphore = sem_open("/my_semaphore", 0);
+sem_t* clientSemaphore = sem_open("/my_semaphore1", O_CREAT, 0666, 0);
+sem_t* serverSemaphore = sem_open("/my_semaphore2", O_CREAT, 0666, 1);
 
 int shmid = shmget(SHM_KEY, BUF_SIZE, IPC_CREAT | 0666);
     
@@ -42,9 +43,10 @@ double calculateArea(int points[ROWS][COLS])
 
 void readFromMemory()
 {
-    sem_wait(semaphore);
+    sem_wait(clientSemaphore); // Wait for client
+    sem_wait(serverSemaphore); // Block access to memory for client
 
-    std::cout << "Hello from server " << &semaphore << "\n";
+    // std::cout << "Hello from server " << &semaphore << "\n";
 
     int resultMatrix[ROWS][COLS];
 
@@ -60,12 +62,16 @@ void readFromMemory()
 
     std::cout << "The area is: " << area << "\n";
 
-    sem_post(semaphore);
+    sem_post(serverSemaphore); // Unlock access to memory memory for client
 }
 
 int main(int argc, char const *argv[])
 {
-    readFromMemory();
+    for (size_t i = 0; i < 10; i++)
+    {
+        readFromMemory();
+    }   
+    
 
     return 0;
 }
