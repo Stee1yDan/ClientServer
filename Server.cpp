@@ -30,6 +30,8 @@ void readFromMemory()
     sem_wait(clientSemaphore); // Wait for client
     sem_wait(serverSemaphore); // Block access to memory for client
 
+    ROWS = *(shmaddr + BUF_SIZE) + 1; // ??????????
+
     int resultMatrix[ROWS][COLS];
 
     for (int row = 0; row < ROWS; row++) //Read from memory 
@@ -37,8 +39,10 @@ void readFromMemory()
         for (int col = 0; col < COLS; col++) 
         {
             resultMatrix[row][col] = *(shmaddr + row * COLS + col);
-            std::cout << resultMatrix[row][col] << "\n";
+            std::cout << resultMatrix[row][col] << " ";
         }
+
+        std::cout << "\n";
     }
 
     double area = 0;
@@ -49,7 +53,6 @@ void readFromMemory()
         area += resultMatrix[i][0] * resultMatrix[j][1] - resultMatrix[j][0] * resultMatrix[i][1];
     }
 
-
     area = abs(area)/2;
     std::cout << "The area is: " << area << "\n";
 
@@ -59,7 +62,7 @@ void readFromMemory()
 int main(int argc, char const *argv[])
 {
     for (size_t i = 0; i < 10; i++)
-    {   ROWS = *(shmaddr + BUF_SIZE);
+    {   
         readFromMemory();
     }   
     
