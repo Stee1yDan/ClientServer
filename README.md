@@ -1,6 +1,6 @@
 # ClientServer
 This project contains 2 programs that use shared memory to communicate with each other. Access control implemented through 2 POSIX semaphores.
-The purpose of the server program is to calculate the area of an irregular polygon. The input to the server is provided through the client program. The client gets its input from the user.
+The purpose of the server program is to calculate the area of an irregular polygon using shoelace formula. The input to the server is provided through the client program. The client gets its input from the user.
 
 Initial state:
 
