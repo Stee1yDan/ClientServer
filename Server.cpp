@@ -30,7 +30,7 @@ void readFromMemory()
     sem_wait(clientSemaphore); // Wait for client
     sem_wait(serverSemaphore); // Block access to memory for client
 
-    ROWS = *(shmaddr + BUF_SIZE) + 1; // ??????????
+    ROWS = *(shmaddr + BUF_SIZE) + 1; // TODO: I promise myself to refactor this later
 
     int resultMatrix[ROWS][COLS];
 
@@ -61,7 +61,7 @@ void readFromMemory()
 
 int main(int argc, char const *argv[])
 {
-    for (size_t i = 0; i < 10; i++)
+    while (true)
     {   
         readFromMemory();
     }   
