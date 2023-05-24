@@ -19,7 +19,7 @@
 int ROWS;
 
 sem_t* clientSemaphore = sem_open("/my_semaphore1", O_CREAT, 0666, 0);
-sem_t* serverSemaphore = sem_open("/my_semaphore2", O_CREAT, 0666, 1);
+sem_t* memorySemaphore = sem_open("/my_semaphore2", O_CREAT, 0666, 1);
 
 int shmid = shmget(SHM_KEY, BUF_SIZE, IPC_CREAT | 0666);
     
@@ -28,7 +28,7 @@ int* shmaddr = (int*) shmat(shmid, NULL, 0);
 void readFromMemory()
 {
     sem_wait(clientSemaphore); // Wait for client
-    sem_wait(serverSemaphore); // Block access to memory for client
+    sem_wait(memorySemaphore); // Block access to memory for client
 
     ROWS = *(shmaddr + BUF_SIZE) + 1; // TODO: I promise myself to refactor this later
 
@@ -56,7 +56,7 @@ void readFromMemory()
     area = abs(area)/2;
     std::cout << "The area is: " << area << "\n";
 
-    sem_post(serverSemaphore); // Unlock access to memory memory for client
+    sem_post(memorySemaphore); // Unlock access to memory memory for client
 }
 
 int main(int argc, char const *argv[])
