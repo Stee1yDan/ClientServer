@@ -6,31 +6,31 @@ Initial state:
 
 clientSemaphore = 0; - block server from reading the critical section
 
-serverSemaphore = 1; - allow client access to the critical section
+memorySemaphore = 1; - allow client access to the critical section
 
 Client writes info to the critical section:
 
 clientSemaphore = 0; - blocks server from reading the critical section
 
-serverSemaphore = 0; - block access to the critical section
+memorySemaphore = 0; - block access to the critical section
 
 After client finishes writing to the critical section:
 
 clientSemaphore = 1; - allows the server to read from the critical section
 
-serverSemaphore = 1; - allow access to the critical section
+memorySemaphore = 1; - allow access to the critical section
 
 Server starts reading from the critical section:
 
 clientSemaphore = 1; - allows the server to read from the critical section
 
-serverSemaphore = 0; - block access to the critical section
+memorySemaphore = 0; - block access to the critical section
 
 After server finishes reading from the critical section:
 
 clientSemaphore = 0; - block server from reading the critical section
 
-serverSemaphore = 1; - allow client access to the critical section
+memorySemaphore = 1; - allow client access to the critical section
 
 
 
